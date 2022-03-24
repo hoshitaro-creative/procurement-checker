@@ -10,6 +10,7 @@
     "@chakra-ui/react": "^1.8.6",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "apify": "^2.2.2",
     "framer-motion": "^6",
     "next": "latest",
     "puppeteer": "^13.5.1",
