@@ -28,8 +28,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       (tds) => tds.map((td) => td.textContent),
     );
   await browser.close();
-  res.status(200).json(titles.map((title, i) => ({ [ids[i]]: title })));
-  // console.log(data);
+  res.status(200).json([ids, titles]);
 };
 
 export default handler;
