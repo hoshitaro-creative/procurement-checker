@@ -1,29 +1,35 @@
 import React, { ReactNode } from "react";
 import Head from "next/head";
-import { Flex, Spacer } from "@chakra-ui/react";
 import {
+  Flex,
+  Spacer,
   Drawer,
   DrawerBody,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from "@chakra-ui/react";
-import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalFooter,
   ModalBody,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
-import { useDisclosure } from "@chakra-ui/react";
+import { FirebaseApp } from "firebase/app";
 
 type Props = {
   children?: ReactNode;
   title?: string;
+  app?: FirebaseApp;
+  signedIn?: boolean;
 };
 
-const Layout = ({ children, title = "This is the default title" }: Props) => {
+const Layout = ({
+  children,
+  title = "This is the default title",
+  signedIn = false,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: modalIsOpen,
@@ -48,14 +54,16 @@ const Layout = ({ children, title = "This is the default title" }: Props) => {
               <DrawerCloseButton></DrawerCloseButton>
               <DrawerBody>
                 <div>qqq</div>
-                <Button
-                  onClick={() => {
-                    onClose();
-                    modalOnOpen();
-                  }}
-                >
-                  {" + "}
-                </Button>
+                {signedIn && (
+                  <Button
+                    onClick={() => {
+                      onClose();
+                      modalOnOpen();
+                    }}
+                  >
+                    {" + "}
+                  </Button>
+                )}
               </DrawerBody>
             </DrawerContent>
           </Drawer>
