@@ -15,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const MyApp = ({
   Component,
   pageProps,
-}: AppProps<FirebaseApp>): JSX.Element => {
+}: AppProps): JSX.Element => {
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
     getAuth(app).onAuthStateChanged((user) => {
