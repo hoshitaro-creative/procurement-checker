@@ -2,6 +2,7 @@
 
 memo.*
 firebaseConfig.ts
+*.log
 
 # dependencies
 /node_modules
