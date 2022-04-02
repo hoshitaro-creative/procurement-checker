@@ -1,22 +1,22 @@
-import React, { ReactNode } from "react";
-import Head from "next/head";
 import {
-  Flex,
-  Spacer,
+  Button,
   Drawer,
   DrawerBody,
-  DrawerOverlay,
-  DrawerContent,
   DrawerCloseButton,
+  DrawerContent,
+  DrawerOverlay,
+  Flex,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalFooter,
-  ModalBody,
-  Button,
+  ModalOverlay,
+  Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
+import React, { ReactNode } from "react";
 import { FirebaseApp } from "firebase/app";
+import Head from "next/head";
 
 type Props = {
   children?: ReactNode;

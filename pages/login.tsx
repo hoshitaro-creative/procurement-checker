@@ -1,9 +1,9 @@
 import { Button, Flex, Input } from "@chakra-ui/react";
+import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
-import { sendSignInLinkToEmail, getAuth } from "firebase/auth";
 import { useState } from "react";
 
-const login = ({
+const Login = ({
   app,
   signedIn = false,
 }: {
@@ -36,4 +36,4 @@ const login = ({
   );
 };
 
-export default login;
+export default Login;

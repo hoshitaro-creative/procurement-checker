@@ -1,27 +1,24 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import type { AppProps } from "next/app";
 import {
-  FirebaseAppProvider,
   AuthProvider,
+  FirebaseAppProvider,
   FirestoreProvider,
 } from "reactfire";
-import { firebaseConfig } from "../firebaseConfig";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { FirebaseApp, initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import { firebaseConfig } from "../firebaseConfig";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
 const app = initializeApp(firebaseConfig);
-const MyApp = ({
-  Component,
-  pageProps,
-}: AppProps): JSX.Element => {
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
     getAuth(app).onAuthStateChanged((user) => {
       setSignedIn(!!user);
     });
-  }, );
+  });
   return (
     <FirebaseAppProvider firebaseApp={app}>
       <AuthProvider sdk={getAuth(app)}>
