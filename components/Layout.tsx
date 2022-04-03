@@ -15,8 +15,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import Head from "next/head";
+import SignInButton from "../components/SIgnInButton";
+import { getAuth } from "firebase/auth";
 
 type Props = {
   children?: ReactNode;
@@ -28,7 +31,7 @@ type Props = {
 const Layout = ({
   children,
   title = "This is the default title",
-  signedIn = false,
+  app,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -36,6 +39,12 @@ const Layout = ({
     onOpen: modalOnOpen,
     onClose: modalOnClose,
   } = useDisclosure();
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    getAuth(app).onAuthStateChanged((user) => {
+      setSignedIn(!!user);
+    });
+  });
 
   return (
     <div>
@@ -54,7 +63,7 @@ const Layout = ({
               <DrawerCloseButton></DrawerCloseButton>
               <DrawerBody>
                 <div>qqq</div>
-                {signedIn && (
+                {signedIn ? (
                   <Button
                     onClick={() => {
                       onClose();
@@ -63,6 +72,8 @@ const Layout = ({
                   >
                     {" + "}
                   </Button>
+                ) : (
+                  <SignInButton></SignInButton>
                 )}
               </DrawerBody>
             </DrawerContent>
