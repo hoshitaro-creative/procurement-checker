@@ -4,6 +4,7 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerOverlay,
   Flex,
   Modal,
@@ -15,11 +16,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
+import { getAuth, isSignInWithEmailLink, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { FirebaseApp } from "firebase/app";
 import Head from "next/head";
 import SignInButton from "../components/SIgnInButton";
-import { getAuth } from "firebase/auth";
 
 type Props = {
   children?: ReactNode;
@@ -43,6 +44,9 @@ const Layout = ({
   useEffect(() => {
     getAuth(app).onAuthStateChanged((user) => {
       setSignedIn(!!user);
+      if (isSignInWithEmailLink(getAuth(app), window.location.href)) {
+        onOpen();
+      }
     });
   });
 
@@ -76,6 +80,13 @@ const Layout = ({
                   <SignInButton></SignInButton>
                 )}
               </DrawerBody>
+              <DrawerFooter>
+                {signedIn && (
+                  <Button onClick={() => signOut(getAuth(app))}>
+                    ログアウト
+                  </Button>
+                )}
+              </DrawerFooter>
             </DrawerContent>
           </Drawer>
           <Modal isOpen={modalIsOpen} onClose={modalOnClose}>
