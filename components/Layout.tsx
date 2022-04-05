@@ -26,7 +26,6 @@ type Props = {
   children?: ReactNode;
   title?: string;
   app?: FirebaseApp;
-  signedIn?: boolean;
 };
 
 const Layout = ({
@@ -41,14 +40,22 @@ const Layout = ({
     onClose: modalOnClose,
   } = useDisclosure();
   const [signedIn, setSignedIn] = useState(false);
+
   useEffect(() => {
-    getAuth(app).onAuthStateChanged((user) => {
-      setSignedIn(!!user);
+    const user = getAuth(app).currentUser;
+    if (user === null) {
+      setSignedIn(false);
+    } else {
+      user.reload().then(() => {
+        setSignedIn(!!getAuth().currentUser);
+      });
+    }
+    getAuth(app).onAuthStateChanged(() => {
       if (isSignInWithEmailLink(getAuth(app), window.location.href)) {
         onOpen();
       }
     });
-  });
+  }, [app]);
 
   return (
     <div>
@@ -73,11 +80,18 @@ const Layout = ({
                       onClose();
                       modalOnOpen();
                     }}
+                    onLoadStart={() => {
+                      getAuth()
+                        .currentUser?.reload()
+                        .then(() => {
+                          setSignedIn(!!getAuth().currentUser);
+                        });
+                    }}
                   >
                     {" + "}
                   </Button>
                 ) : (
-                  <SignInButton></SignInButton>
+                  <SignInButton app={app}></SignInButton>
                 )}
               </DrawerBody>
               <DrawerFooter>

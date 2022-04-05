@@ -37,3 +37,27 @@ export const procurement = functions.https.onRequest(
     response.json([ids, titles]);
   },
 );
+
+import * as admin from "firebase-admin";
+admin.initializeApp();
+
+import allowedEmails from "./allowedEmails";
+
+exports.allowUserByEmail = functions.auth.user().onCreate((user) => {
+  const uid = user.uid;
+  const email = user.email;
+
+  if (email === undefined || !allowedEmails.includes(email)) {
+    admin
+      .auth()
+      .revokeRefreshTokens(uid)
+      .then(() => {
+        admin
+          .auth()
+          .deleteUser(uid)
+          .then(() => {
+            console.log(`Delete user: ${email}`);
+          });
+      });
+  }
+});

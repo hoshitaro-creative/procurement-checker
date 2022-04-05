@@ -1,10 +1,8 @@
 import { EmailAuthProvider, getAuth } from "firebase/auth";
+import { FirebaseApp } from "firebase/app";
 import { StyledFirebaseAuth } from "react-firebaseui";
-import { firebaseConfig } from "../firebaseConfig";
-import { initializeApp } from "firebase/app";
 
-const SigninButton = () => {
-  const app = initializeApp(firebaseConfig);
+const SigninButton = ({ app }: { app?: FirebaseApp }) => {
   return (
     <StyledFirebaseAuth
       uiConfig={{
