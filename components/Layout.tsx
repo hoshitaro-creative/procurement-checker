@@ -16,11 +16,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
-import { getAuth, isSignInWithEmailLink, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
 import Head from "next/head";
 import SignInButton from "../components/SIgnInButton";
+import { useState } from "react";
 
 type Props = {
   children?: ReactNode;
@@ -40,22 +40,6 @@ const Layout = ({
     onClose: modalOnClose,
   } = useDisclosure();
   const [signedIn, setSignedIn] = useState(false);
-
-  useEffect(() => {
-    const user = getAuth(app).currentUser;
-    if (user === null) {
-      setSignedIn(false);
-    } else {
-      user.reload().then(() => {
-        setSignedIn(!!getAuth().currentUser);
-      });
-    }
-    getAuth(app).onAuthStateChanged(() => {
-      if (isSignInWithEmailLink(getAuth(app), window.location.href)) {
-        onOpen();
-      }
-    });
-  }, [app]);
 
   return (
     <div>
@@ -79,13 +63,6 @@ const Layout = ({
                     onClick={() => {
                       onClose();
                       modalOnOpen();
-                    }}
-                    onLoadStart={() => {
-                      getAuth()
-                        .currentUser?.reload()
-                        .then(() => {
-                          setSignedIn(!!getAuth().currentUser);
-                        });
                     }}
                   >
                     {" + "}
