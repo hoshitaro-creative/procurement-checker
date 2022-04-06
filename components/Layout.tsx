@@ -19,7 +19,7 @@ import React, { ReactNode } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
 import Head from "next/head";
-import SignInButton from "../components/SIgnInButton";
+import SignInButton from "./SignInButton";
 import { useState } from "react";
 
 type Props = {
@@ -68,12 +68,20 @@ const Layout = ({
                     {" + "}
                   </Button>
                 ) : (
-                  <SignInButton app={app}></SignInButton>
+                  <SignInButton
+                    app={app}
+                    setSignedIn={setSignedIn}
+                  ></SignInButton>
                 )}
               </DrawerBody>
               <DrawerFooter>
                 {signedIn && (
-                  <Button onClick={() => signOut(getAuth(app))}>
+                  <Button
+                    onClick={() => {
+                      signOut(getAuth(app));
+                      setSignedIn(false);
+                    }}
+                  >
                     ログアウト
                   </Button>
                 )}
