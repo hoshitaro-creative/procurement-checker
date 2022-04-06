@@ -1,4 +1,3 @@
-import "firebaseui/dist/firebaseui.css";
 import {
   AuthProvider,
   FirebaseAppProvider,
