@@ -19,6 +19,7 @@ import React, { ReactNode } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
 import Head from "next/head";
+import Router from "next/router";
 import SignInButton from "./SignInButton";
 import { useState } from "react";
 
@@ -80,6 +81,7 @@ const Layout = ({
                     onClick={() => {
                       signOut(getAuth(app));
                       setSignedIn(false);
+                      Router.replace("/");
                     }}
                   >
                     ログアウト
