@@ -2,10 +2,10 @@
   "name": "functions",
   "scripts": {
     "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "serve": "yarn run build && firebase emulators:start --only functions",
+    "shell": "yarn run build && firebase functions:shell",
+    "start": "yarn run shell",
+    "deploy": "yarn run build && firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.20.0",
+    "lodash": "^4.17.21",
     "playwright-aws-lambda": "^0.7.0",
     "playwright-core": "^1.20.2"
   },

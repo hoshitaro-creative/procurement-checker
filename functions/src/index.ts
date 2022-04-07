@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as playwright from "playwright-aws-lambda";
+import { union } from "lodash";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -39,10 +40,12 @@ export const procurement = functions.pubsub.schedule(
         .evaluateAll(
           (tds) => tds.map((td) => td.textContent),
         );
-      await page.close();
+      // await page.close();
+      const data = await firestore().collection("procurement").doc(docName)
+        .get().then((doc) => doc.data());
       await firestore().collection("procurement").doc(docName).set({
-        ids,
-        titles,
+        ids: union(data?.ids, ids),
+        titles: union(data?.titles, titles),
       });
     };
     await browser.close();
