@@ -1,12 +1,13 @@
+import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
-import * as playwright from "playwright-aws-lambda";
+import * as playwright from "playwright"
 import { union } from "lodash";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
 export const procurement = functions.pubsub.schedule(
-  "every 3 hours synchronized",
+  "every 10 mins synchronized",
 ).onRun(
   async () => {
     const query = await firestore().collection("procurement").get();
@@ -16,7 +17,21 @@ export const procurement = functions.pubsub.schedule(
       return docName;
     });
 
-    const browser = await playwright.launchChromium({ headless: true });
+    const browser = await playwright.chromium.launch({
+      headless: true,
+      args: [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--no-first-run",
+        "--no-sandbox",
+        "--no-zygote",
+        "--single-process",
+        "--proxy-server='direct://'",
+        "--proxy-bypass-list=*",
+        "--deterministic-fetch",
+      ],
+    });
     const fetchData = async (docName: string) => {
       const page = await browser.newPage();
       await page.goto("https://www.p-portal.go.jp/pps-web-biz/UAA01/OAA0101", {
@@ -40,7 +55,7 @@ export const procurement = functions.pubsub.schedule(
         .evaluateAll(
           (tds) => tds.map((td) => td.textContent),
         );
-      // await page.close();
+      await page.close();
       const data = await firestore().collection("procurement").doc(docName)
         .get().then((doc) => doc.data());
       await firestore().collection("procurement").doc(docName).set({
@@ -48,16 +63,14 @@ export const procurement = functions.pubsub.schedule(
         titles: union(data?.titles, titles),
       });
     };
+    Promise.all(docNames.map(async (docName) => await fetchData(docName)));
     await browser.close();
-    docNames.map(async (docName) => await fetchData(docName));
   },
 );
 
 import * as admin from "firebase-admin";
 admin.initializeApp();
-
 import allowedEmails from "./allowedEmails";
-import { firestore } from "firebase-admin";
 
 exports.allowUserByEmail = functions.auth.user().onCreate((user) => {
   const uid = user.uid;
